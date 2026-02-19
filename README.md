@@ -6,20 +6,63 @@ A platform used by CNCG Panama to manage the ticket ordering process for their e
 
 ## Prerequisites
 
-TO-DO
+- Node.js 20+
+- npm or pnpm
+- PostgreSQL database
+
+### Environment Variables
+
+Copy and rename the `.env.template` file to fill the required variables
+
+```
+cp .env.template .env
+```
+
+| Variable                  | Required       | Default                            | Description                                  |
+| ------------------------- | -------------- | ---------------------------------- | -------------------------------------------- |
+| `DATABASE_URL`            | Yes            |                                   | PostgreSQL connection string used by Prisma. |
+| `PAGUELOFACIL_BASE_URL`   | No             | `https://sandbox.paguelofacil.com` | PagueloFacil API base URL.                   |
+| `PAGUELOFACIL_CCLW`       | Yes (payments) |                                   | PagueloFacil merchant key/token.             |
+| `PAGUELOFACIL_RETURN_URL` | Yes (payments) | 68747470733A2F2F7469636B65742E6B636470616E616D612E636F6D2F7061796D656E74732F726573756C74                                 | return url hex encoded after a payment is completed |
+| `PAGUELOFACIL_EXPIRES_IN` | No             | 3600                             | Payment link expiration in seconds.          |
+| `PAGUELOFACIL_CTAX`       | No             | 7                                | Payment tax percentage                       |
 
 ## Getting Started
 
+### Clone the repository and copy environment variables
+
 ```
-# Clone the repository
+git clone https://github.com/cncgpanama/ticketing-platform.git
+cd ticketing-platform
+cp .env.template .env
+```
+### Install dependencies and generate the Prisma client 
 
-git clone <REPO_URL>
-cd <REPO_NAME>
-
-# Install dependencies
+```
 npm install
+npm run db:client
+```
+
+### Apply migrations and seed the database
+
+```
+npm run db:migrate
+npm run db:seed
+```
+
+> [!TIP]
+> You can preview the database with prisma studio
+
+```
+npm run db:studio
+```
+
+### Run the application in development mode (default port 3000)
+
+```
 npm run dev
 ```
+
 
 ## Community
 
