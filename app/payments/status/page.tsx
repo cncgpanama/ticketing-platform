@@ -6,7 +6,9 @@ export default async function PaymentStatusPage(props: {
 }) {
   const searchParams = await props.searchParams;
   const success = searchParams.success === "true";
-  const message = (searchParams.message as string) || (success ? "Payment Successful!" : "Payment Failed");
+  const message = success
+    ? "Your payment was processed successfully."
+    : "We couldn't complete your payment. Please try again.";
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center p-4 text-center bg-gray-50">

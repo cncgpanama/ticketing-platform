@@ -500,6 +500,7 @@ export async function updateOrderToPaid(input: {
       await tx.order.update({
         where: { id: orderIdAsBigInt },
         data: {
+          payment_oper: paymentId,
           order_status: "paid",
           updated_at: new Date(),
         },

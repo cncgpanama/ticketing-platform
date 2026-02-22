@@ -18,14 +18,16 @@ Copy and rename the `.env.template` file to fill the required variables
 cp .env.template .env
 ```
 
-| Variable                  | Required       | Default                            | Description                                  |
-| ------------------------- | -------------- | ---------------------------------- | -------------------------------------------- |
-| `DATABASE_URL`            | Yes            |                                   | PostgreSQL connection string used by Prisma. |
-| `PAGUELOFACIL_BASE_URL`   | No             | `https://sandbox.paguelofacil.com` | PagueloFacil API base URL.                   |
-| `PAGUELOFACIL_CCLW`       | Yes (payments) |                                   | PagueloFacil merchant key/token.             |
-| `PAGUELOFACIL_RETURN_URL` | Yes (payments) | 68747470733A2F2F7469636B65742E6B636470616E616D612E636F6D2F7061796D656E74732F726573756C74                                 | return url hex encoded after a payment is completed |
-| `PAGUELOFACIL_EXPIRES_IN` | No             | 3600                             | Payment link expiration in seconds.          |
-| `PAGUELOFACIL_CTAX`       | No             | 7                                | Payment tax percentage                       |
+| Variable                  | Required       | Default                                                                                  | Description                                                 |
+| ------------------------- | -------------- | ---------------------------------------------------------------------------------------- | ----------------------------------------------------------- |
+| `DATABASE_URL`            | Yes            |                                                                                          | PostgreSQL connection string used by Prisma.                |
+| `PAGUELOFACIL_BASE_URL`   | No             | `https://sandbox.paguelofacil.com`                                                       | PagueloFacil API base URL.                                  |
+| `PAGUELOFACIL_CCLW`       | Yes (payments) |                                                                                          | PagueloFacil merchant key/token.                            |
+| `PAGUELOFACIL_RETURN_URL` | Yes (payments) | 68747470733A2F2F7469636B65742E6B636470616E616D612E636F6D2F7061796D656E74732F726573756C74 | return url hex encoded after a payment is completed         |
+| `PAGUELOFACIL_EXPIRES_IN` | No             | 3600                                                                                     | Payment link expiration in seconds.                         |
+| `PAGUELOFACIL_CTAX`       | No             | 7                                                                                        | Payment tax percentage                                      |
+| `PAGUELOFACIL_TOKEN`      | Yes            |                                                                                          | PagueloFacil transactions request token                     |
+| `ATTENDEE_FORM_FIELDS`    | No             |                                                                                          | prefilled registration filled for quick development/testing |
 
 ## Getting Started
 
@@ -36,7 +38,8 @@ git clone https://github.com/cncgpanama/ticketing-platform.git
 cd ticketing-platform
 cp .env.template .env
 ```
-### Install dependencies and generate the Prisma client 
+
+### Install dependencies and generate the Prisma client
 
 ```
 npm install
@@ -62,7 +65,6 @@ npm run db:studio
 ```
 npm run dev
 ```
-
 
 ## Community
 
