@@ -16,13 +16,23 @@ import { MAX_TICKETS_PER_BUYER, STEPS } from "./constants";
 import { PaymentStep } from "./payment-step";
 import { StepSidebar } from "./step-sidebar";
 import { TicketCard } from "./ticket-card";
-import type { AttendeeData, BuyerData, DiscountInfo, SelectedTickets, TicketTierUI } from "./types";
+import type {
+  AttendeeData,
+  BuyerData,
+  DiscountInfo,
+  SelectedTickets,
+  TicketTierUI,
+} from "./types";
 import { useSessionTimer } from "./use-session-timer";
 import { formatUSD } from "./utils";
 
 interface RegistrationFlowProps {
   ticketTiers: TicketTierUI[];
   attendeInitialData: AttendeeData;
+}
+
+function createEmptyAttendee(attendeInitialData: AttendeeData): AttendeeData {
+  return structuredClone(attendeInitialData);
 }
 
 export function RegistrationFlow({
@@ -81,10 +91,6 @@ export function RegistrationFlow({
     setDiscountError(null);
   }
 
-  function createEmptyAttendee(): AttendeeData {
-    return structuredClone(attendeInitialData);
-  }
-
   const selectedSlugs = Object.entries(selectedTickets)
     .filter(([, qty]) => qty > 0)
     .map(([slug]) => slug);
@@ -113,13 +119,12 @@ export function RegistrationFlow({
 
       return [
         ...prev,
-        ...Array.from(
-          { length: requiredAttendees - prev.length },
-          createEmptyAttendee,
+        ...Array.from({ length: requiredAttendees - prev.length }, () =>
+          createEmptyAttendee(attendeInitialData),
         ),
       ];
     });
-  }, [totalSelectedTickets]);
+  }, [totalSelectedTickets, attendeInitialData]);
 
   function updateAttendee(index: number, data: AttendeeData) {
     setAttendees((prev) =>
