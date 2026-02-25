@@ -601,15 +601,15 @@ export async function updateOrderToAwaitingPayment(
  * Creates a payment URL in PagueloFacil for an order.
  */
 export async function createPaymentUrl(
-  orderId: string
+  orderId: string,
 ): Promise<{ success: boolean; url?: string; error?: string }> {
   try {
     const cclw = environment.PAGUELOFACIL_CCLW;
-    const returnUrl = environment.PAGUELOFACIL_RETURN_URL;
+    const returnUrlHexEncoded = environment.PAGUELOFACIL_RETURN_URL;
     const baseUrl =
       environment.PAGUELOFACIL_BASE_URL
 
-    if (!cclw || !returnUrl) {
+    if (!cclw || !returnUrlHexEncoded) {
       return {
         success: false,
         error:
@@ -657,11 +657,12 @@ export async function createPaymentUrl(
       )
       .join(", ")}`.slice(0, 255);
 
+
     const form = new URLSearchParams({
       CCLW: cclw,
       CMTN: amount.toFixed(2),
       CDSC: description,
-      RETURN_URL: returnUrl,
+      RETURN_URL: returnUrlHexEncoded.toString(),
       EXPIRES_IN: "3600",
       CTAX: taxAmount.toFixed(2),
       orderId: order.id.toString(),

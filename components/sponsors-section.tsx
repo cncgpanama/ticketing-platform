@@ -16,6 +16,16 @@ const SPONSORS = {
   ],
 };
 
+type SponsorsDictionary = {
+  title: string;
+  platinumTitle: string;
+  goldTitle: string;
+  silverTitle: string;
+  ctaTitle: string;
+  ctaBodyPrefix: string;
+  ctaBodySuffix: string;
+};
+
 function SponsorLogo({
   name,
   abbr,
@@ -41,17 +51,17 @@ function SponsorLogo({
   );
 }
 
-export function SponsorsSection() {
+export function SponsorsSection({ dictionary }: { dictionary: SponsorsDictionary }) {
   return (
     <section id="sponsors" className="scroll-mt-20">
       <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-        Sponsors
+        {dictionary.title}
       </h2>
 
       <div className="mt-10 space-y-12">
         <div>
           <h3 className="mb-6 text-center text-sm font-bold uppercase tracking-[0.2em] text-primary">
-            Platinum Sponsors
+            {dictionary.platinumTitle}
           </h3>
           <div className="flex flex-wrap items-center justify-center gap-8">
             {SPONSORS.platinum.map((s) => (
@@ -62,7 +72,7 @@ export function SponsorsSection() {
 
         <div>
           <h3 className="mb-6 text-center text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">
-            Gold Sponsors
+            {dictionary.goldTitle}
           </h3>
           <div className="flex flex-wrap items-center justify-center gap-6">
             {SPONSORS.gold.map((s) => (
@@ -73,7 +83,7 @@ export function SponsorsSection() {
 
         <div>
           <h3 className="mb-6 text-center text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground/80">
-            Silver Sponsors
+            {dictionary.silverTitle}
           </h3>
           <div className="flex flex-wrap items-center justify-center gap-4">
             {SPONSORS.silver.map((s) => (
@@ -85,17 +95,17 @@ export function SponsorsSection() {
 
       <div className="mt-16 rounded-2xl bg-muted/30 p-8 text-center border border-dashed border-border">
         <h3 className="text-lg font-semibold text-foreground">
-          Interested in sponsoring?
+          {dictionary.ctaTitle}
         </h3>
         <p className="mt-2 text-muted-foreground">
-          Reach out to us at{" "}
+          {dictionary.ctaBodyPrefix}{" "}
           <a
             href="mailto:sponsors@kcdpanama.com"
             className="font-medium text-primary hover:underline"
           >
             sponsors@kcdpanama.com
           </a>{" "}
-          to learn about our packages.
+          {dictionary.ctaBodySuffix}
         </p>
       </div>
     </section>

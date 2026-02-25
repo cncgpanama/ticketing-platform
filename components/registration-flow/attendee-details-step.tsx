@@ -12,10 +12,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import type { Dictionary } from "@/lib/i18n/dictionaries";
 import { COUNTRIES, INDUSTRIES, ORG_TYPES } from "./constants";
 import type { AttendeeData, BuyerData } from "./types";
 
 interface AttendeeDetailsStepProps {
+  dictionary: Dictionary["registration"]["attendee"];
   buyer: BuyerData;
   onBuyerChange: (data: BuyerData) => void;
   attendees: AttendeeData[];
@@ -24,6 +26,7 @@ interface AttendeeDetailsStepProps {
 }
 
 export function AttendeeDetailsStep({
+  dictionary,
   buyer,
   onBuyerChange,
   attendees,
@@ -56,9 +59,11 @@ export function AttendeeDetailsStep({
   return (
     <div className="flex flex-col gap-6">
       <div className="rounded-lg border border-border bg-card p-6">
-        <h3 className="text-lg font-bold text-foreground">{"Buyer Details"}</h3>
+        <h3 className="text-lg font-bold text-foreground">
+          {dictionary.buyerDetailsTitle}
+        </h3>
         <p className="mt-1 text-sm text-muted-foreground">
-          {"Invoice/receipt and order communication will use this information."}
+          {dictionary.buyerDetailsDescription}
         </p>
 
         <div className="mt-5 grid gap-5 md:grid-cols-2">
@@ -67,7 +72,7 @@ export function AttendeeDetailsStep({
               htmlFor="buyer-full-name"
               className="mb-1.5 block text-sm font-medium text-foreground"
             >
-              {"Full Name*"}
+              {dictionary.fullName}
             </label>
             <Input
               id="buyer-full-name"
@@ -81,7 +86,7 @@ export function AttendeeDetailsStep({
               htmlFor="buyer-email"
               className="mb-1.5 block text-sm font-medium text-foreground"
             >
-              {"Email Address*"}
+              {dictionary.email}
             </label>
             <Input
               id="buyer-email"
@@ -96,7 +101,7 @@ export function AttendeeDetailsStep({
               htmlFor="buyer-phone"
               className="mb-1.5 block text-sm font-medium text-foreground"
             >
-              {"Phone (Optional)"}
+              {dictionary.phoneOptional}
             </label>
             <Input
               id="buyer-phone"
@@ -109,7 +114,8 @@ export function AttendeeDetailsStep({
 
       {attendees.map((attendee, index) => {
         const attendeeNumber = index + 1;
-        const ticketLabel = ticketLabels[index] ?? `Ticket ${attendeeNumber}`;
+        const ticketLabel =
+          ticketLabels[index] ?? `${dictionary.ticketLabelFallback} ${attendeeNumber}`;
         const isExpanded = expandedAttendees.includes(index);
 
         function updateAttendee(
@@ -129,7 +135,7 @@ export function AttendeeDetailsStep({
                 {ticketLabel}
                 {" ("}
                 {attendeeNumber}
-                {" of "}
+                {dictionary.attendeeOfSeparator}
                 {attendees.length}
                 {")"}
               </h3>
@@ -142,8 +148,8 @@ export function AttendeeDetailsStep({
                 aria-expanded={isExpanded}
                 aria-label={
                   isExpanded
-                    ? "Collapse attendee details"
-                    : "Expand attendee details"
+                    ? dictionary.collapseAttendee
+                    : dictionary.expandAttendee
                 }
               >
                 {isExpanded ? (
@@ -162,7 +168,7 @@ export function AttendeeDetailsStep({
                       htmlFor={`att-first-name-${index}`}
                       className="mb-1.5 block text-sm font-medium text-foreground"
                     >
-                      {"First Name*"}
+                      {dictionary.firstName}
                     </label>
                     <Input
                       id={`att-first-name-${index}`}
@@ -177,7 +183,7 @@ export function AttendeeDetailsStep({
                       htmlFor={`att-last-name-${index}`}
                       className="mb-1.5 block text-sm font-medium text-foreground"
                     >
-                      {"Last Name*"}
+                      {dictionary.lastName}
                     </label>
                     <Input
                       id={`att-last-name-${index}`}
@@ -194,7 +200,7 @@ export function AttendeeDetailsStep({
                     htmlFor={`att-email-${index}`}
                     className="mb-1.5 block text-sm font-medium text-foreground"
                   >
-                    {"Email Address*"}
+                    {dictionary.email}
                   </label>
                   <Input
                     id={`att-email-${index}`}
@@ -206,14 +212,14 @@ export function AttendeeDetailsStep({
 
                 <div>
                   <label className="mb-1.5 block text-sm font-medium text-foreground">
-                    {"Country*"}
+                    {dictionary.country}
                   </label>
                   <Select
                     value={attendee.country}
                     onValueChange={(v) => updateAttendee("country", v)}
                   >
                     <SelectTrigger className="bg-card">
-                      <SelectValue placeholder="Select a country" />
+                      <SelectValue placeholder={dictionary.selectCountry} />
                     </SelectTrigger>
                     <SelectContent>
                       {COUNTRIES.map((c) => (
@@ -230,7 +236,7 @@ export function AttendeeDetailsStep({
                     htmlFor={`att-job-${index}`}
                     className="mb-1.5 block text-sm font-medium text-foreground"
                   >
-                    {"Job Title*"}
+                    {dictionary.jobTitle}
                   </label>
                   <Input
                     id={`att-job-${index}`}
@@ -244,7 +250,7 @@ export function AttendeeDetailsStep({
                     htmlFor={`att-company-${index}`}
                     className="mb-1.5 block text-sm font-medium text-foreground"
                   >
-                    {"Current Company/Organization/University*"}
+                    {dictionary.company}
                   </label>
                   <Input
                     id={`att-company-${index}`}
@@ -260,7 +266,7 @@ export function AttendeeDetailsStep({
                     htmlFor={`att-company-url-${index}`}
                     className="mb-1.5 block text-sm font-medium text-foreground"
                   >
-                    {"Company URL"}
+                    {dictionary.companyUrl}
                   </label>
                   <Input
                     id={`att-company-url-${index}`}
@@ -276,7 +282,7 @@ export function AttendeeDetailsStep({
                     htmlFor={`att-work-address-${index}`}
                     className="mb-1.5 block text-sm font-medium text-foreground"
                   >
-                    {"Work Address"}
+                    {dictionary.workAddress}
                   </label>
                   <Input
                     id={`att-work-address-${index}`}
@@ -292,7 +298,7 @@ export function AttendeeDetailsStep({
                     htmlFor={`att-work-phone-${index}`}
                     className="mb-1.5 block text-sm font-medium text-foreground"
                   >
-                    {"Work Phone"}
+                    {dictionary.workPhone}
                   </label>
                   <Input
                     id={`att-work-phone-${index}`}
@@ -308,7 +314,7 @@ export function AttendeeDetailsStep({
                     htmlFor={`att-emergency-contact-${index}`}
                     className="mb-1.5 block text-sm font-medium text-foreground"
                   >
-                    {"Emergency Contact"}
+                    {dictionary.emergencyContact}
                   </label>
                   <Input
                     id={`att-emergency-contact-${index}`}
@@ -324,7 +330,7 @@ export function AttendeeDetailsStep({
                     htmlFor={`att-github-${index}`}
                     className="mb-1.5 block text-sm font-medium text-foreground"
                   >
-                    {"GitHub Handle"}
+                    {dictionary.githubHandle}
                   </label>
                   <Input
                     id={`att-github-${index}`}
@@ -337,14 +343,14 @@ export function AttendeeDetailsStep({
 
                 <div>
                   <label className="mb-1.5 block text-sm font-medium text-foreground">
-                    {"Industry*"}
+                    {dictionary.industry}
                   </label>
                   <Select
                     value={attendee.industry}
                     onValueChange={(v) => updateAttendee("industry", v)}
                   >
                     <SelectTrigger className="bg-card">
-                      <SelectValue placeholder="Select" />
+                      <SelectValue placeholder={dictionary.select} />
                     </SelectTrigger>
                     <SelectContent>
                       {INDUSTRIES.map((i) => (
@@ -361,7 +367,7 @@ export function AttendeeDetailsStep({
                     htmlFor={`att-org-represents-${index}`}
                     className="mb-1.5 block text-sm font-medium text-foreground"
                   >
-                    {"Organization Represents*"}
+                    {dictionary.organizationRepresents}
                   </label>
                   <Input
                     id={`att-org-represents-${index}`}
@@ -374,14 +380,14 @@ export function AttendeeDetailsStep({
 
                 <div>
                   <label className="mb-1.5 block text-sm font-medium text-foreground">
-                    {"I represent an organization that:"}
+                    {dictionary.organizationType}
                   </label>
                   <Select
                     value={attendee.organizationType}
                     onValueChange={(v) => updateAttendee("organizationType", v)}
                   >
                     <SelectTrigger className="bg-card">
-                      <SelectValue placeholder="Select" />
+                      <SelectValue placeholder={dictionary.select} />
                     </SelectTrigger>
                     <SelectContent>
                       {ORG_TYPES.map((o) => (
@@ -398,7 +404,7 @@ export function AttendeeDetailsStep({
                     htmlFor={`att-primary-role-${index}`}
                     className="mb-1.5 block text-sm font-medium text-foreground"
                   >
-                    {"Primary Role"}
+                    {dictionary.primaryRole}
                   </label>
                   <Input
                     id={`att-primary-role-${index}`}
@@ -411,19 +417,21 @@ export function AttendeeDetailsStep({
 
                 <div>
                   <label className="mb-1.5 block text-sm font-medium text-foreground">
-                    {"Is this your first KCD?"}
+                    {dictionary.firstKcd}
                   </label>
                   <Select
                     value={attendee.firstTimeKcd}
                     onValueChange={(v) => updateAttendee("firstTimeKcd", v)}
                   >
                     <SelectTrigger className="bg-card">
-                      <SelectValue placeholder="Select" />
+                      <SelectValue placeholder={dictionary.select} />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="yes">Yes</SelectItem>
-                      <SelectItem value="no">No</SelectItem>
-                      <SelectItem value="skip">Prefer not to say</SelectItem>
+                      <SelectItem value="yes">{dictionary.yes}</SelectItem>
+                      <SelectItem value="no">{dictionary.no}</SelectItem>
+                      <SelectItem value="skip">
+                        {dictionary.preferNotToSay}
+                      </SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -433,7 +441,7 @@ export function AttendeeDetailsStep({
                     htmlFor={`att-shirt-size-${index}`}
                     className="mb-1.5 block text-sm font-medium text-foreground"
                   >
-                    {"Shirt Size"}
+                    {dictionary.shirtSize}
                   </label>
                   <Input
                     id={`att-shirt-size-${index}`}
@@ -449,7 +457,7 @@ export function AttendeeDetailsStep({
                     htmlFor={`att-dietary-needs-${index}`}
                     className="mb-1.5 block text-sm font-medium text-foreground"
                   >
-                    {"Dietary Needs"}
+                    {dictionary.dietaryNeeds}
                   </label>
                   <Input
                     id={`att-dietary-needs-${index}`}
@@ -462,7 +470,7 @@ export function AttendeeDetailsStep({
 
                 <div>
                   <label className="mb-1.5 block text-sm font-medium text-foreground">
-                    {"Disability Accommodation Needed?"}
+                    {dictionary.disabilityAccommodation}
                   </label>
                   <Select
                     value={attendee.disabilityAccommodation}
@@ -471,12 +479,14 @@ export function AttendeeDetailsStep({
                     }
                   >
                     <SelectTrigger className="bg-card">
-                      <SelectValue placeholder="Select" />
+                      <SelectValue placeholder={dictionary.select} />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="yes">Yes</SelectItem>
-                      <SelectItem value="no">No</SelectItem>
-                      <SelectItem value="skip">Prefer not to say</SelectItem>
+                      <SelectItem value="yes">{dictionary.yes}</SelectItem>
+                      <SelectItem value="no">{dictionary.no}</SelectItem>
+                      <SelectItem value="skip">
+                        {dictionary.preferNotToSay}
+                      </SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -486,7 +496,7 @@ export function AttendeeDetailsStep({
                     htmlFor={`att-person-of-color-${index}`}
                     className="mb-1.5 block text-sm font-medium text-foreground"
                   >
-                    {"Person of Color"}
+                    {dictionary.personOfColor}
                   </label>
                   <Input
                     id={`att-person-of-color-${index}`}
@@ -502,7 +512,7 @@ export function AttendeeDetailsStep({
                     htmlFor={`att-gender-identity-${index}`}
                     className="mb-1.5 block text-sm font-medium text-foreground"
                   >
-                    {"Gender Identity"}
+                    {dictionary.genderIdentity}
                   </label>
                   <Input
                     id={`att-gender-identity-${index}`}
@@ -518,7 +528,7 @@ export function AttendeeDetailsStep({
                     htmlFor={`att-age-range-${index}`}
                     className="mb-1.5 block text-sm font-medium text-foreground"
                   >
-                    {"Age Range"}
+                    {dictionary.ageRange}
                   </label>
                   <Input
                     id={`att-age-range-${index}`}
@@ -541,16 +551,12 @@ export function AttendeeDetailsStep({
                     className="text-sm leading-relaxed text-muted-foreground"
                   >
                     <span className="font-semibold text-foreground">
-                      {"CNCF Communications"}
+                      {dictionary.cncfCommunicationsTitle}
                     </span>
                     <br />
-                    {
-                      "In addition, if you check the check box to the left of this text, you further authorize KCD NAME and the Cloud Native Computing Foundation to contact you via email regarding other events and open source projects from time to time. You can unsubscribe from these additional email communications at any time by following the 'unsubscribe' instructions included within such communications or by sending an unsubscribe request to privacy@linuxfoundation.org."
-                    }
+                    {dictionary.cncfCommunicationsBodyOne}
                     <br />
-                    {
-                      "By submitting this registration you consent to The Cloud Native Computing Foundation's communication with you with respect to the event or services to which this registration pertains.*"
-                    }
+                    {dictionary.cncfCommunicationsBodyTwo}
                   </label>
                 </div>
 
@@ -566,9 +572,7 @@ export function AttendeeDetailsStep({
                     htmlFor={`sponsor-opt-in-${index}`}
                     className="text-sm text-muted-foreground"
                   >
-                    {
-                      "I would like to receive ticket and event updates over WhatsApp"
-                    }
+                    {dictionary.whatsappOptIn}
                   </label>
                 </div>
               </div>

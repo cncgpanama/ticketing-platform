@@ -3,7 +3,13 @@
 import { Check } from "lucide-react";
 import { STEPS } from "./constants";
 
-export function StepSidebar({ currentStep }: { currentStep: number }) {
+export function StepSidebar({
+  currentStep,
+  labels,
+}: {
+  currentStep: number;
+  labels: readonly string[];
+}) {
   return (
     <div className="flex flex-col items-center gap-0">
       {STEPS.map((step, index) => {
@@ -33,7 +39,7 @@ export function StepSidebar({ currentStep }: { currentStep: number }) {
                 isActive ? "text-foreground" : "text-muted-foreground"
               }`}
             >
-              {step.label}
+              {labels[index]}
             </span>
             {index < STEPS.length - 1 && (
               <div

@@ -1,9 +1,6 @@
-import { RegistrationFlow } from "@/components/registration-flow";
-import { getTicketTiers } from "@/lib/actions/ticket.actions";
-import { environment } from "@/lib/constants/environment";
+import { redirect } from "next/navigation";
+import { defaultLocale } from "@/lib/i18n/config";
 
-export default async function RegisterPage() {
-  const ticketTypes = await getTicketTiers();
-
-  return <RegistrationFlow ticketTiers={ticketTypes} attendeInitialData={environment.ATTENDEE_FORM_FIELDS} />;
+export default function RegisterPage() {
+  redirect(`/${defaultLocale}/register`);
 }

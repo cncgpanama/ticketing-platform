@@ -1,41 +1,24 @@
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
 
-const SPEAKERS = [
-  {
-    name: "Miguel Gonzalez",
-    title: "Sr. Platform Engineer",
-    company: "Google Cloud",
-    initials: "PS",
-  },
-  {
-    name: "Jesús Rodriguez",
-    title: "DevOps Lead",
-    company: "Razorpay",
-    initials: "RM",
-  },
-  {
-    name: "Gabriel Dabila",
-    title: "Cloud Architect",
-    company: "Microsoft",
-    initials: "AG",
-  },
-  {
-    name: "José Marín",
-    title: "SRE Manager",
-    company: "Flipkart",
-    initials: "VS",
-  },
-];
+type SpeakersDictionary = {
+  title: string;
+  items: Array<{
+    name: string;
+    title: string;
+    company: string;
+    initials: string;
+  }>;
+};
 
-export function SpeakersSection() {
+export function SpeakersSection({ dictionary }: { dictionary: SpeakersDictionary }) {
   return (
     <section id="speakers" className="scroll-mt-20">
       <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-        Speakers
+        {dictionary.title}
       </h2>
       <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {SPEAKERS.map((speaker) => (
+        {dictionary.items.map((speaker) => (
           <Card
             key={speaker.name}
             className="group overflow-hidden border-border transition-all hover:border-primary/50 hover:shadow-md"

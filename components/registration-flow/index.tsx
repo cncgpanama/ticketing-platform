@@ -25,8 +25,12 @@ import type {
 } from "./types";
 import { useSessionTimer } from "./use-session-timer";
 import { formatUSD } from "./utils";
+import type { Locale } from "@/lib/i18n/config";
+import type { Dictionary } from "@/lib/i18n/dictionaries";
 
 interface RegistrationFlowProps {
+  lang: Locale;
+  dictionary: Dictionary["registration"];
   ticketTiers: TicketTierUI[];
   attendeInitialData: AttendeeData;
 }
@@ -36,6 +40,8 @@ function createEmptyAttendee(attendeInitialData: AttendeeData): AttendeeData {
 }
 
 export function RegistrationFlow({
+  lang,
+  dictionary,
   ticketTiers,
   attendeInitialData,
 }: RegistrationFlowProps) {
@@ -170,7 +176,7 @@ export function RegistrationFlow({
   // Handle discount code application
   const handleApplyDiscount = useCallback(async () => {
     if (!discountCode.trim()) {
-      setDiscountError("Please enter a discount code");
+      setDiscountError(dictionary.errors.discountCodeRequired);
       return;
     }
 
@@ -188,14 +194,14 @@ export function RegistrationFlow({
         });
         setDiscountError(null);
       } else {
-        setDiscountError(result.error || "Invalid discount code");
+        setDiscountError(result.error || dictionary.errors.invalidDiscountCode);
       }
     } catch {
-      setDiscountError("Failed to validate discount code");
+      setDiscountError(dictionary.errors.validateDiscountFailed);
     } finally {
       setIsApplyingDiscount(false);
     }
-  }, [discountCode, selectedSlugs]);
+  }, [discountCode, selectedSlugs, dictionary.errors]);
 
   // Handle proceed to next step
   const handleProceed = useCallback(async () => {
@@ -254,10 +260,10 @@ export function RegistrationFlow({
           setOrderId(result.orderId);
           setCurrentStep(2);
         } else {
-          setOrderError(result.error || "Failed to create order");
+          setOrderError(result.error || dictionary.errors.createOrderFailed);
         }
       } catch {
-        setOrderError("An error occurred while creating your order");
+        setOrderError(dictionary.errors.createOrderUnexpected);
       } finally {
         setIsProceedLoading(false);
       }
@@ -270,6 +276,8 @@ export function RegistrationFlow({
     attendees,
     buyer,
     appliedDiscount,
+    dictionary.errors.createOrderFailed,
+    dictionary.errors.createOrderUnexpected,
   ]);
 
   // Handle payment redirect
@@ -279,12 +287,11 @@ export function RegistrationFlow({
     setIsPayLoading(true);
     setOrderError(null);
     try {
-      const payment = await createPaymentUrl(orderId);
+      const payment = await createPaymentUrl(orderId, lang);
       if (!payment.success || !payment.url) {
-        const message =
-          payment.error || "Failed to initialize payment. Please try again.";
+        const message = payment.error || dictionary.errors.initPaymentFailed;
         setOrderError(message);
-        window.alert("We could not start payment. Please try again.");
+        window.alert(dictionary.errors.initPaymentAlert);
         return;
       }
 
@@ -292,25 +299,28 @@ export function RegistrationFlow({
       const statusResult = await updateOrderToAwaitingPayment(orderId);
       if (!statusResult.success) {
         const message =
-          statusResult.error ||
-          "Failed to initialize payment. Please try again.";
+          statusResult.error || dictionary.errors.initPaymentFailed;
         setOrderError(message);
-        window.alert("We could not start payment. Please try again.");
+        window.alert(dictionary.errors.initPaymentAlert);
         return;
       }
 
       // Redirect user to payment provider URL
       window.location.assign(payment.url);
     } catch {
-      setOrderError("Failed to initiate payment. Please try again.");
-      window.alert("We could not start payment. Please try again.");
+      setOrderError(dictionary.errors.initPaymentUnexpected);
+      window.alert(dictionary.errors.initPaymentAlert);
     } finally {
       setIsPayLoading(false);
     }
-  }, [orderId]);
+  }, [orderId, lang, dictionary.errors]);
 
   const proceedLabel =
-    currentStep === 0 ? "Proceed" : currentStep === 1 ? "Checkout" : "Pay Now";
+    currentStep === 0
+      ? dictionary.proceed.proceed
+      : currentStep === 1
+        ? dictionary.proceed.checkout
+        : dictionary.proceed.payNow;
 
   return (
     <div className="min-h-screen bg-background">
@@ -319,20 +329,18 @@ export function RegistrationFlow({
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 lg:px-8">
           <div className="flex items-center gap-4">
             <Link
-              href="/"
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-border text-foreground transition-colors hover:bg-secondary"
-              aria-label="Back to event page"
+              href={`/${lang}`}
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-border text-foreground transition-colors hover:bg-secondary hover:text-secondary-foreground"
+              aria-label={dictionary.header.backToEventAria}
             >
               <ArrowLeft className="h-5 w-5" />
             </Link>
             <div>
               <h1 className="text-lg font-bold text-foreground">
-                {"KCD Panama 2026"}
+                {dictionary.header.eventTitle}
               </h1>
               <p className="text-sm text-muted-foreground">
-                {
-                  "Apr 21st, 2026 at 8:00 AM (GMT-5) to Apr 23rd, 2026 at 6:00 PM (GMT-5)"
-                }
+                {dictionary.header.eventDateRange}
               </p>
             </div>
           </div>
@@ -348,7 +356,7 @@ export function RegistrationFlow({
             >
               <Clock className="h-4 w-4" />
               <span>
-                {"Time Left: "}
+                {dictionary.header.timeLeftLabel}
                 {timer.minutes}
                 {":"}
                 {String(timer.seconds).padStart(2, "0")}
@@ -370,7 +378,10 @@ export function RegistrationFlow({
         <div className="flex gap-6 lg:gap-10">
           {/* Left: Step Indicator */}
           <div className="hidden shrink-0 md:block">
-            <StepSidebar currentStep={currentStep} />
+            <StepSidebar
+              currentStep={currentStep}
+              labels={dictionary.steps.labels}
+            />
           </div>
 
           {/* Center: Main Content */}
@@ -414,6 +425,7 @@ export function RegistrationFlow({
                 {ticketTiers.map((tier) => (
                   <TicketCard
                     key={tier.slug}
+                    dictionary={dictionary.ticketCard}
                     tier={tier}
                     quantity={selectedTickets[tier.slug] || 0}
                     onIncrease={() => updateTicketQuantity(tier.slug, 1)}
@@ -422,9 +434,9 @@ export function RegistrationFlow({
                   />
                 ))}
                 <p className="text-sm text-muted-foreground">
-                  {"A buyer can purchase up to "}
+                  {dictionary.steps.maxTicketsPrefix}
                   {MAX_TICKETS_PER_BUYER}
-                  {" tickets in one order."}
+                  {dictionary.steps.maxTicketsSuffix}
                 </p>
               </div>
             )}
@@ -432,6 +444,7 @@ export function RegistrationFlow({
             {/* Step: Attendee Details */}
             {currentStep === 1 && (
               <AttendeeDetailsStep
+                dictionary={dictionary.attendee}
                 buyer={buyer}
                 onBuyerChange={setBuyer}
                 attendees={attendees}
@@ -443,6 +456,7 @@ export function RegistrationFlow({
             {/* Step: Payment */}
             {currentStep === 2 && (
               <PaymentStep
+                dictionary={dictionary.paymentStep}
                 onBack={() => setCurrentStep(1)}
                 total={total}
                 orderId={orderId}
@@ -456,6 +470,7 @@ export function RegistrationFlow({
           <div className="hidden w-72 shrink-0 lg:block">
             <div className="sticky top-8">
               <CartSidebar
+                dictionary={dictionary.cart}
                 ticketTiers={ticketTiers}
                 selectedTickets={selectedTickets}
                 discountCode={discountCode}
@@ -486,13 +501,13 @@ export function RegistrationFlow({
                   </p>
                   {currentStep >= 1 && (
                     <p className="text-xs text-muted-foreground">
-                      {"+ processing fee"}
+                      {dictionary.mobileBar.processingFee}
                     </p>
                   )}
                 </div>
               ) : (
                 <p className="text-sm text-muted-foreground">
-                  {"No tickets selected"}
+                  {dictionary.mobileBar.noTicketsSelected}
                 </p>
               )}
             </div>
@@ -501,7 +516,7 @@ export function RegistrationFlow({
                 {isPayLoading ? (
                   <Loader2 className="h-4 w-4 animate-spin" />
                 ) : (
-                  "Pay Now"
+                  dictionary.proceed.payNow
                 )}
               </Button>
             ) : (
@@ -516,9 +531,9 @@ export function RegistrationFlow({
                 {isProceedLoading ? (
                   <Loader2 className="h-4 w-4 animate-spin" />
                 ) : currentStep === 0 ? (
-                  "Proceed"
+                  dictionary.proceed.proceed
                 ) : (
-                  "Checkout"
+                  dictionary.proceed.checkout
                 )}
               </Button>
             )}

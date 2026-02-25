@@ -5,6 +5,13 @@ import { Button } from "@/components/ui/button";
 import { formatUSD } from "./utils";
 
 interface PaymentStepProps {
+  dictionary: {
+    title: string;
+    descriptionPrefix: string;
+    orderIdPrefix: string;
+    payWithProvider: string;
+    back: string;
+  };
   onBack: () => void;
   total: number;
   orderId: string | null;
@@ -13,6 +20,7 @@ interface PaymentStepProps {
 }
 
 export function PaymentStep({
+  dictionary,
   onBack,
   total,
   orderId,
@@ -23,21 +31,19 @@ export function PaymentStep({
     <div className="rounded-lg border border-border bg-card p-8 text-center">
       <CreditCard className="mx-auto h-14 w-14 text-primary" />
       <h3 className="mt-4 text-xl font-bold text-foreground">
-        {"Complete Your Payment"}
+        {dictionary.title}
       </h3>
       <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed text-muted-foreground">
-        {
-          "You will be redirected to PagueloFacil's secure checkout to complete your payment of "
-        }
+        {dictionary.descriptionPrefix}
         <span className="font-semibold text-foreground">
           {formatUSD(total)}
         </span>
-        {"."}
+        .
       </p>
 
       {orderId && (
         <p className="mt-2 text-xs text-muted-foreground">
-          {"Order ID: "}
+          {dictionary.orderIdPrefix}
           <span className="font-mono">{orderId.slice(0, 8)}...</span>
         </p>
       )}
@@ -53,13 +59,13 @@ export function PaymentStep({
             <Loader2 className="h-4 w-4 animate-spin" />
           ) : (
             <>
-              {"Pay with PagueloFacil"}
+              {dictionary.payWithProvider}
               <ExternalLink className="h-4 w-4" />
             </>
           )}
         </Button>
         <Button variant="outline" onClick={onBack} disabled={isPayLoading}>
-          Back
+          {dictionary.back}
         </Button>
       </div>
     </div>
