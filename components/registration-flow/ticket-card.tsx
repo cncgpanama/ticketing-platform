@@ -6,6 +6,13 @@ import type { TicketTierUI } from "./types";
 import { formatUSD } from "./utils";
 
 interface TicketCardProps {
+  dictionary: {
+    useCouponCode: string;
+    includes: string;
+    roadmapNotice: string;
+    soldOut: string;
+    comingSoon: string;
+  };
   tier: TicketTierUI;
   quantity: number;
   onIncrease: () => void;
@@ -14,6 +21,7 @@ interface TicketCardProps {
 }
 
 export function TicketCard({
+  dictionary,
   tier,
   quantity,
   onIncrease,
@@ -37,7 +45,7 @@ export function TicketCard({
         )}
         {tier.couponCode && (
           <p className="text-sm text-muted-foreground">
-            {"USE Coupon Code: "}
+            {dictionary.useCouponCode}
             <span className="font-medium text-foreground">
               {tier.couponCode}
             </span>
@@ -52,7 +60,7 @@ export function TicketCard({
 
       <div className="mt-4">
         <p className="text-sm font-medium text-foreground">
-          {"Your ticket includes:"}
+          {dictionary.includes}
         </p>
         <ul className="mt-2 flex flex-col gap-1.5 pl-5">
           {tier.features.map((feature) => (
@@ -67,9 +75,7 @@ export function TicketCard({
       </div>
 
       <p className="mt-4 text-sm italic text-muted-foreground">
-        {
-          "Check the website for the latest updates; the roadmap may change, as always."
-        }
+        {dictionary.roadmapNotice}
       </p>
 
       <div className="mt-4 flex items-center justify-between">
@@ -79,7 +85,7 @@ export function TicketCard({
 
         {uiStatus === "sold-out" && (
           <Button variant="outline" disabled className="min-w-[100px]">
-            Sold Out
+            {dictionary.soldOut}
           </Button>
         )}
         {uiStatus === "available" && (
@@ -107,7 +113,7 @@ export function TicketCard({
         )}
         {uiStatus === "coming-soon" && (
           <Button variant="outline" disabled className="min-w-[100px]">
-            Coming Soon
+            {dictionary.comingSoon}
           </Button>
         )}
       </div>

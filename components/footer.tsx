@@ -9,13 +9,13 @@ const SOCIAL_LINKS = [
   { label: "Slack", href: "https://communityinviter.com/apps/cloud-native/cncf", icon: Slack },
 ]
 
-const FOOTER_LINKS = [
-  { label: "Code of Conduct", href: "https://events.linuxfoundation.org/about/code-of-conduct" },
-  { label: "Contact", href: "https://community.cncf.io/cloud-native-panama" },
-  { label: "CNCF", href: "https://www.cncf.io" },
-]
+type FooterDictionary = {
+  communityText: string;
+  links: Array<{ label: string; href: string }>;
+  rightsReserved: string;
+};
 
-export function Footer() {
+export function Footer({ dictionary }: { dictionary: FooterDictionary }) {
   return (
     <footer className="border-t border-border bg-muted/30">
       <div className="mx-auto flex max-w-7xl flex-col items-center gap-8 px-4 py-12 lg:flex-row lg:justify-between lg:px-8">
@@ -27,12 +27,12 @@ export function Footer() {
             <span className="text-sm font-bold text-foreground">CNCG Panama </span>
           </div>
           <p className="text-sm text-muted-foreground text-center lg:text-left max-w-xs">
-            A community supported by the Cloud Native Computing Foundation.
+            {dictionary.communityText}
           </p>
         </div>
 
         <div className="flex flex-wrap justify-center gap-x-8 gap-y-4">
-          {FOOTER_LINKS.map((link) => (
+          {dictionary.links.map((link) => (
             <a
               key={link.label}
               href={link.href}
@@ -59,8 +59,8 @@ export function Footer() {
 
       <div className="border-t border-border/50 py-6 text-center">
         <p className="text-xs text-muted-foreground">
-          © {new Date().getFullYear()} Kubernetes Community Days Panama. All
-          rights reserved.
+          © {new Date().getFullYear()} Kubernetes Community Days Panama.{" "}
+          {dictionary.rightsReserved}
         </p>
       </div>
     </footer>

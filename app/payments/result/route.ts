@@ -3,6 +3,7 @@ import { prisma } from "@/db/prisma";
 import { updateOrderToPaid } from "@/lib/actions/order.actions";
 import { verifyMerchantTransactionByOperCode } from "@/lib/actions/payment.actions";
 import { PaymentCallbackError } from "@/lib/errors/payment-callback-error";
+import { defaultLocale, hasLocale } from "@/lib/i18n/config";
 
 
 export async function GET(request: Request) {
@@ -11,6 +12,8 @@ export async function GET(request: Request) {
   const estado = searchParams.get("Estado");
   const oper = searchParams.get("Oper");
   const orderId = searchParams.get("orderId");
+  const langParam = searchParams.get("lang");
+  const lang = langParam && hasLocale(langParam) ? langParam : defaultLocale;
 
   let success = false;
   const logContext = {
@@ -54,7 +57,7 @@ export async function GET(request: Request) {
         orderDbId: order.id.toString(),
       });
       return NextResponse.redirect(
-        new URL(`/payments/status?success=true`, request.url)
+        new URL(`/${lang}/payments/status?success=true`, request.url)
       );
     }
 
@@ -110,7 +113,7 @@ export async function GET(request: Request) {
     }
   }
 
-  const statusUrl = new URL("/payments/status", request.url);
+  const statusUrl = new URL(`/${lang}/payments/status`, request.url);
   statusUrl.searchParams.set("success", success ? "true" : "false");
 
   return NextResponse.redirect(statusUrl);

@@ -7,6 +7,18 @@ import type { DiscountInfo, SelectedTickets, TicketTierUI } from "./types";
 import { formatUSD } from "./utils";
 
 interface CartSidebarProps {
+  dictionary: {
+    summaryTitle: string;
+    subTotal: string;
+    discountLabel: string;
+    total: string;
+    processingFeeNote: string;
+    emptySelection: string;
+    applyDiscountTitle: string;
+    enterCodePlaceholder: string;
+    apply: string;
+    discountAppliedPrefix: string;
+  };
   ticketTiers: TicketTierUI[];
   selectedTickets: SelectedTickets;
   discountCode: string;
@@ -22,6 +34,7 @@ interface CartSidebarProps {
 }
 
 export function CartSidebar({
+  dictionary,
   ticketTiers,
   selectedTickets,
   discountCode,
@@ -58,7 +71,7 @@ export function CartSidebar({
       {hasSelection ? (
         <div className="w-full">
           <p className="text-base font-bold text-foreground">
-            {"Ticket Summary"}
+            {dictionary.summaryTitle}
           </p>
           <div className="mt-3 flex flex-col gap-2">
             {ticketTiers
@@ -83,18 +96,20 @@ export function CartSidebar({
                 </div>
               ))}
             <div className="flex items-center justify-between text-sm text-muted-foreground">
-              <span>{"Sub Total"}</span>
+              <span>{dictionary.subTotal}</span>
               <span>{formatUSD(subTotal)}</span>
             </div>
             {appliedDiscount && discountAmount > 0 && (
               <div className="flex items-center justify-between text-sm text-green-600">
-                <span>{"Discount (" + appliedDiscount.code + ")"}</span>
+                <span>
+                  {dictionary.discountLabel + " (" + appliedDiscount.code + ")"}
+                </span>
                 <span>{"- " + formatUSD(discountAmount)}</span>
               </div>
             )}
             <div className="border-t border-border pt-2">
               <div className="flex items-center justify-between text-base font-bold">
-                <span className="text-foreground">{"Total"}</span>
+                <span className="text-foreground">{dictionary.total}</span>
                 <span className="text-foreground">
                   {formatUSD(total)}
                   {"*"}
@@ -102,7 +117,7 @@ export function CartSidebar({
               </div>
             </div>
             <p className="text-xs leading-relaxed text-destructive">
-              {"Processing Fee will be added on selecting payment method*"}
+              {dictionary.processingFeeNote}
             </p>
           </div>
         </div>
@@ -110,9 +125,7 @@ export function CartSidebar({
         <div className="flex flex-col items-center gap-3 text-center">
           <ShoppingCart className="h-12 w-12 text-muted-foreground/50" />
           <p className="text-sm text-muted-foreground">
-            {
-              "You haven't selected any ticket. Select a ticket to see the ticket summary."
-            }
+            {dictionary.emptySelection}
           </p>
         </div>
       )}
@@ -120,11 +133,11 @@ export function CartSidebar({
       {/* Discount Code */}
       <div className="mt-6">
         <p className="text-sm font-semibold text-foreground">
-          {"Apply Discount Code"}
+          {dictionary.applyDiscountTitle}
         </p>
         <div className="mt-2 flex gap-2">
           <Input
-            placeholder="Enter Code"
+            placeholder={dictionary.enterCodePlaceholder}
             value={discountCode}
             onChange={(e) => onDiscountCodeChange(e.target.value)}
             className="bg-card"
@@ -141,7 +154,7 @@ export function CartSidebar({
             ) : appliedDiscount ? (
               <Check className="h-4 w-4" />
             ) : (
-              "Apply"
+              dictionary.apply
             )}
           </Button>
         </div>
@@ -150,7 +163,7 @@ export function CartSidebar({
         )}
         {appliedDiscount && (
           <p className="mt-1 text-xs text-green-600">
-            {"Discount applied: " +
+            {dictionary.discountAppliedPrefix +
               (appliedDiscount.description || appliedDiscount.code)}
           </p>
         )}

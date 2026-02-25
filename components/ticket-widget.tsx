@@ -11,17 +11,29 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import { useCountdown } from "@/hooks/use-countdown";
+import type { Locale } from "@/lib/i18n/config";
 
 const EVENT_DATE_MS = new Date("2026-04-21").getTime();
-const FEATURES = [
-  "Full 3-day conference access",
-  "Workshops & Lightning Talks",
-  "Networking Events",
-  "Swag Bag & T-Shirt",
-  "Lunch & Coffee Breaks",
-];
+type TicketWidgetDictionary = {
+  title: string;
+  description: string;
+  countdownLabels: {
+    days: string;
+    hours: string;
+    mins: string;
+  };
+  features: string[];
+  registerNow: string;
+  limitedTickets: string;
+};
 
-export function TicketWidget() {
+export function TicketWidget({
+  lang,
+  dictionary,
+}: {
+  lang: Locale;
+  dictionary: TicketWidgetDictionary;
+}) {
   const { days, hours, minutes } = useCountdown(EVENT_DATE_MS);
 
   return (
@@ -30,22 +42,22 @@ export function TicketWidget() {
         <div className="flex items-center justify-between">
           <div className=" flex items-baseline gap-1">
             <CardTitle className="text-xl font-bold">
-              <span className="text-xl font-bold">Secure Your Spot</span>
+              <span className="text-xl font-bold">{dictionary.title}</span>
             </CardTitle>
           </div>
         </div>
 
         <CardDescription className="text-primary-foreground text-sm">
-          Join the cloud native community in Panama.
+          {dictionary.description}
         </CardDescription>
       </CardHeader>
 
       <CardContent className="flex flex-col gap-6 pt-2">
         <div className="mt-4 grid grid-cols-3 gap-2">
           {[
-            { label: "Days", value: days },
-            { label: "Hours", value: hours },
-            { label: "Mins", value: minutes },
+            { label: dictionary.countdownLabels.days, value: days },
+            { label: dictionary.countdownLabels.hours, value: hours },
+            { label: dictionary.countdownLabels.mins, value: minutes },
           ].map((item) => (
             <div
               key={item.label}
@@ -62,7 +74,7 @@ export function TicketWidget() {
         </div>
 
         <ul className="flex flex-col gap-3">
-          {FEATURES.map((feature) => (
+          {dictionary.features.map((feature) => (
             <li
               key={feature}
               className="flex items-start gap-3 text-sm text-muted-foreground"
@@ -80,11 +92,11 @@ export function TicketWidget() {
           className="w-full bg-secondary text-secondary-foreground hover:bg-secondary/90 text-base font-bold shadow-md transition-colors"
           asChild
         >
-          <Link href="/register">Register Now</Link>
+          <Link href={`/${lang}/register`}>{dictionary.registerNow}</Link>
         </Button>
 
         <p className="text-center text-xs text-muted-foreground">
-          Limited tickets available for this batch.
+          {dictionary.limitedTickets}
         </p>
       </CardContent>
     </Card>

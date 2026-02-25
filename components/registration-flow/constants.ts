@@ -1,10 +1,10 @@
 import { Ticket, Users, CreditCard } from "lucide-react";
 
 export const STEPS = [
-  { id: "tickets", label: "Pick Tickets", icon: Ticket },
-  { id: "attendee", label: "Attendee\nDetails", icon: Users },
-  { id: "payment", label: "Payment", icon: CreditCard },
-];
+  { id: "tickets", icon: Ticket },
+  { id: "attendee", icon: Users },
+  { id: "payment", icon: CreditCard },
+] as const;
 
 export const COUNTRIES = [
   "Panama",

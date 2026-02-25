@@ -1,78 +1,19 @@
-const SCHEDULE = [
-  {
-    time: "08:30 AM",
-    title: "Registration & Breakfast",
-    speaker: null,
-    type: "break",
-  },
-  {
-    time: "09:00 AM",
-    title: "Opening Keynote: The State of Cloud Native in Panama",
-    speaker: "Priya Sharma",
-    type: "keynote",
-  },
-  {
-    time: "09:45 AM",
-    title: "Building Resilient Microservices with Kubernetes",
-    speaker: "Rahul Mehta",
-    type: "talk",
-  },
-  {
-    time: "10:30 AM",
-    title: "Coffee Break & Networking",
-    speaker: null,
-    type: "break",
-  },
-  {
-    time: "11:00 AM",
-    title: "Securing Your Kubernetes Clusters: Best Practices",
-    speaker: "Ananya Gupta",
-    type: "talk",
-  },
-  {
-    time: "11:45 AM",
-    title: "Observability at Scale with OpenTelemetry",
-    speaker: "Vikram Singh",
-    type: "talk",
-  },
-  { time: "12:30 PM", title: "Lunch Break", speaker: null, type: "break" },
-  {
-    time: "01:30 PM",
-    title: "GitOps and the Future of Continuous Delivery",
-    speaker: "Neha Kapoor",
-    type: "talk",
-  },
-  {
-    time: "02:15 PM",
-    title: "Contributing to Kubernetes: A Beginner's Guide",
-    speaker: "Arjun Patel",
-    type: "talk",
-  },
-  {
-    time: "03:00 PM",
-    title: "Lightning Talks",
-    speaker: "Community",
-    type: "talk",
-  },
-  {
-    time: "03:45 PM",
-    title: "Panel Discussion: Cloud Native Careers",
-    speaker: "All Speakers",
-    type: "keynote",
-  },
-  {
-    time: "04:30 PM",
-    title: "Closing Remarks & Swag Giveaway",
-    speaker: null,
-    type: "break",
-  },
-];
+type ScheduleDictionary = {
+  title: string;
+  keynoteTag: string;
+  items: Array<{
+    time: string;
+    title: string;
+    speaker: string | null;
+    type: "keynote" | "break" | "talk";
+  }>;
+};
 
-export function ScheduleSection() {
+export function ScheduleSection({ dictionary }: { dictionary: ScheduleDictionary }) {
   return (
     <section id="schedule" className="scroll-mt-20">
       <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-        Schedule
+        {dictionary.title}
       </h2>
       <div className="mt-8 relative">
         <div
@@ -81,7 +22,7 @@ export function ScheduleSection() {
         />
 
         <div className="flex flex-col gap-4">
-          {SCHEDULE.map((item, i) => (
+          {dictionary.items.map((item, i) => (
             <div key={i} className="relative flex gap-6 pl-6 group">
               {/* Dot */}
               <div
@@ -118,7 +59,7 @@ export function ScheduleSection() {
                 )}
                 {item.type === "keynote" && (
                   <span className="mt-2 inline-block rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary">
-                    Keynote
+                    {dictionary.keynoteTag}
                   </span>
                 )}
               </div>
