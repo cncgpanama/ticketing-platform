@@ -6,6 +6,8 @@ export const environment = {
     PAGUELOFACIL_EXPIRES_IN: process.env.PAGUELOFACIL_EXPIRES_IN ?? "3600" as string,
 
     DATABASE_URL: process.env.DATABASE_URL as string,
+    RESEND_API_KEY: process.env.RESEND_API_KEY as string,
+    SENDER_EMAIL: process.env.SENDER_EMAIL as string,
 
     ATTENDEE_FORM_FIELDS: (process.env.ATTENDEE_FORM_FIELDS && JSON.parse(process.env.ATTENDEE_FORM_FIELDS)) ?? {
         firstName: "",
