@@ -24,7 +24,7 @@ import type {
   TicketTierUI,
 } from "./types";
 import { useSessionTimer } from "./use-session-timer";
-import { formatUSD } from "./utils";
+import { formatUSD } from "@/lib/utils";
 import type { Locale } from "@/lib/i18n/config";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
 
