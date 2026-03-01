@@ -52,7 +52,9 @@ PurchaseReceiptEmail.PreviewProps = {
   },
 } satisfies PurchaseReceiptEmailProps;
 
-export default function PurchaseReceiptEmail({ receipt }: PurchaseReceiptEmailProps) {
+export default function PurchaseReceiptEmail({
+  receipt,
+}: PurchaseReceiptEmailProps) {
   return (
     <Html>
       <Preview>Your KCD Panama ticket receipt</Preview>
@@ -62,14 +64,16 @@ export default function PurchaseReceiptEmail({ receipt }: PurchaseReceiptEmailPr
           <Container className="max-w-xl">
             <Heading>Purchase Receipt</Heading>
             <Text>
-              Thanks for registering to the KCD Panama 2026! This receipt includes each attendee and their assigned ticket.
+              Thanks for registering to the KCD Panama 2026! This receipt
+              includes each attendee and their assigned ticket.
             </Text>
             <Section>
               <Text className="my-1">
                 <strong>Order No:</strong> {receipt.orderId}
               </Text>
               <Text className="my-1">
-                <strong>Purchase Date:</strong> {dateFormatter.format(receipt.createdAt)}
+                <strong>Purchase Date:</strong>{" "}
+                {dateFormatter.format(receipt.createdAt)}
               </Text>
               <Text className="my-1">
                 <strong>Buyer Email:</strong> {receipt.buyerEmail}
@@ -79,7 +83,11 @@ export default function PurchaseReceiptEmail({ receipt }: PurchaseReceiptEmailPr
               </Text>
             </Section>
             <Section className="rounded-lg px-2 mb-2">
-              <Heading as="h2" className="text-lg mb-2 pb-1 inline-block" style={{ borderBottom: "1px solid #94EAFF" }}>
+              <Heading
+                as="h2"
+                className="text-lg mb-2 pb-1 inline-block"
+                style={{ borderBottom: "1px solid #94EAFF" }}
+              >
                 Attendees
               </Heading>
               {receipt.attendees.map((attendee, index) => (
@@ -101,6 +109,11 @@ export default function PurchaseReceiptEmail({ receipt }: PurchaseReceiptEmailPr
                   </Text>
                 </Section>
               ))}
+            </Section>
+            <Section className="text-center">
+              <Text className="text-md text-gray-500 my-1">
+                *Tax invoice will be mailed at a later date.
+              </Text>
             </Section>
           </Container>
         </Body>
