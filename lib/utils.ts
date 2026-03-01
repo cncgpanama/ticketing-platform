@@ -31,3 +31,8 @@ const USD_FORMATTER = new Intl.NumberFormat("en-US", {
 export function formatUSD(amount: number) {
   return USD_FORMATTER.format(amount);
 }
+
+export function encodeHex(input: string): string {
+  return (new TextEncoder().encode(input) as any).toHex();
+}
+
