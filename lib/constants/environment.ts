@@ -1,6 +1,6 @@
 import { encodeHex } from "@/lib/utils";
 
-const returnUrl = process.env.VERCEL_URL && encodeHex(process.env.VERCEL_URL).toUpperCase();
+const returnUrl = process.env.VERCEL_URL && encodeHex(`https://${process.env.VERCEL_URL}/payments/result`).toUpperCase();
 
 export const environment = {
     PAGUELOFACIL_BASE_URL: process.env.PAGUELOFACIL_BASE_URL as string,
