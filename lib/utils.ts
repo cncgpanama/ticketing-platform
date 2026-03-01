@@ -20,3 +20,19 @@ export function mapStatusToUI(
       return "available";
   }
 }
+
+const USD_FORMATTER = new Intl.NumberFormat("en-US", {
+  style: "currency",
+  currency: "USD",
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2,
+});
+
+export function formatUSD(amount: number) {
+  return USD_FORMATTER.format(amount);
+}
+
+export function encodeHex(input: string): string {
+  return Buffer.from(input).toString("hex");
+}
+

@@ -4,7 +4,7 @@ import { Check, Loader2, ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import type { DiscountInfo, SelectedTickets, TicketTierUI } from "./types";
-import { formatUSD } from "./utils";
+import { formatUSD } from "@/lib/utils";
 
 interface CartSidebarProps {
   dictionary: {
