@@ -33,6 +33,6 @@ export function formatUSD(amount: number) {
 }
 
 export function encodeHex(input: string): string {
-  return (new TextEncoder().encode(input) as any).toHex();
+  return Buffer.from(input).toString("hex");
 }
 
