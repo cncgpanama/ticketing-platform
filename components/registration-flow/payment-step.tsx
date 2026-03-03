@@ -2,7 +2,7 @@
 
 import { CreditCard, ExternalLink, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { formatUSD } from "./utils";
+import { formatUSD } from "@/lib/utils";
 
 interface PaymentStepProps {
   dictionary: {

@@ -3,6 +3,7 @@
 import { prisma } from "@/db/prisma";
 import { revalidatePath } from "next/cache";
 import { environment } from "@/lib/constants/environment";
+import { sendPurchaseReceipt } from "@/email";
 
 const ORDER_EXPIRATION_MINUTES = 10;
 const MAX_TICKETS_PER_ORDER = 5;
@@ -92,6 +93,7 @@ export type OrderWithDetails = {
     firstName: string;
     lastName: string;
     email: string;
+    phone: string | null;
     jobTitle: string;
     companyName: string;
     country: string;
@@ -549,6 +551,24 @@ export async function updateOrderToPaid(input: {
       });
     });
 
+    const orderWithDetails = await getOrderById(orderId);
+    if (orderWithDetails) {
+      try {
+        await sendPurchaseReceipt({ order: orderWithDetails });
+      } catch (emailError) {
+        console.error("Failed to send purchase receipt:", {
+          orderId,
+          paymentId,
+          emailError,
+        });
+      }
+    } else {
+      console.warn("Skipped receipt email: order details not found", {
+        orderId,
+        paymentId,
+      });
+    }
+
     revalidatePath("/register");
     return { success: true };
   } catch (error) {
@@ -886,6 +906,7 @@ export async function getOrderById(
         firstName: attendee.first_name,
         lastName: attendee.last_name,
         email: attendee.email,
+        phone: attendee.work_phone,
         jobTitle: attendee.job_title,
         companyName: attendee.company_name,
         country: attendee.country,

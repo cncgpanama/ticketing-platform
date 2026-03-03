@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { mapStatusToUI } from "@/lib/utils";
 import type { TicketTierUI } from "./types";
-import { formatUSD } from "./utils";
+import { formatUSD } from "@/lib/utils";
 
 interface TicketCardProps {
   dictionary: {

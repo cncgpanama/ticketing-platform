@@ -26,7 +26,9 @@ cp .env.template .env
 | `PAGUELOFACIL_RETURN_URL` | Yes (payments) | 68747470733A2F2F7469636B65742E6B636470616E616D612E636F6D2F7061796D656E74732F726573756C74 | return url hex encoded after a payment is completed         |
 | `PAGUELOFACIL_EXPIRES_IN` | No             | 3600                                                                                     | Payment link expiration in seconds.                         |
 | `PAGUELOFACIL_CTAX`       | No             | 7                                                                                        | Payment tax percentage                                      |
-| `PAGUELOFACIL_TOKEN`      | Yes            |                                                                                          | PagueloFacil transactions request token                     |
+| `PAGUELOFACIL_TOKEN`      | Yes            |                                                                                          | PagueloFacil transactions request token                       |
+| `RESEND_API_KEY`          | Yes            |                                                                                          | Resend email service API Key |                     |
+| `SENDER_EMAIL`          | Yes            |  onboarding@resend.dev                                                                     | Resend sender email (default is for testing single receipt only)  |                     |
 | `ATTENDEE_FORM_FIELDS`    | No             |                                                                                          | prefilled registration filled for quick development/testing |
 
 ## Getting Started
